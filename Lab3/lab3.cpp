@@ -145,6 +145,16 @@ int main(){
             !G;
         }
 
+        else if(command == "isReachable"){
+            int v1, v2;
+            cin>>v1>>v2;
+            if(G.isReachable()){
+                cout<<"Yes"<<endl;
+            }
+            else{
+                cout<<"No"<<endl;
+            }
+        }
         else if(command == "union"){
             string _ ;
             cin>> _;
@@ -154,6 +164,6 @@ int main(){
         }
     }
     while(command != "end");
-
+}
 
 
