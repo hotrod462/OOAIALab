@@ -6,6 +6,21 @@ class Graph{
     public:
 
         Graph operator -(){
+            Graph H;
+            for(int ii= 0; ii< adjList.size(); ii++){
+                set<int> nbrset = adjList[ii];
+               set<int> comple;
+               for(int i =0 ; i< adjList.size(); i++) {
+                comple.insert(i);
+               }
+               for(auto nbr: nbrset){
+                comple.erase(nbr);
+               }
+
+               adjList[ii]= comple;
+
+
+            }
 
         }
 
