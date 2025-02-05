@@ -5,7 +5,25 @@ using namespace std;
 class Graph{
     public:
 
-        void operator -(){
+        void operator +(Graph H){
+            int N1 = adjList.size();
+            int N2 = H.adjList.size();
+
+            if(N2> N1){
+                adjList.resize(N2);
+            }
+            
+            int nodes = adjList.size();
+
+            for(int i =0; i< nodes; i++){
+                set<int> &unionset = adjList[i];
+                
+                for(auto adj : H.adjList[i]){
+                    unionset.insert(adj);
+                }
+            }
+        }
+        void operator !(){
             int N = adjList.size();
             for(int ii= 0; ii< N ; ii++){
                 set<int> nbrset = adjList[ii];
@@ -117,9 +135,16 @@ int main(){
             G.removeEdge();
         }
         else if(command == "complement"){
-            -G;
+            !G;
         }
 
+        else if(command == "union"){
+            string _ ;
+            cin>> _;
+            Graph H;
+            cin>>H;
+            G + H;
+        }
     }
     while(command != "end");
 
