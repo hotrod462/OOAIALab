@@ -83,13 +83,20 @@ class Graph{
             q.push(v1);
             while(!q.empty()){
                 int front = q.front();
+                visited.insert(front);
                 q.pop();
 
+                if(front == v2){
+                    return true;
+                }
+
                 for(auto nbr: adjList[front]){
+                    if(visited.find(nbr) == visited.end()){
                     q.push(nbr);
+                    }
                 }
             }
-            return true; //TODO
+            return false; //TODO
         }
 
     private:
@@ -150,4 +157,3 @@ int main(){
 
 
 
-}
