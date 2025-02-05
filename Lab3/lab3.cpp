@@ -5,17 +5,18 @@ using namespace std;
 class Graph{
     public:
 
-        Graph operator -(){
-            Graph H;
-            for(int ii= 0; ii< adjList.size(); ii++){
+        void operator -(){
+            int N = adjList.size();
+            for(int ii= 0; ii< N ; ii++){
                 set<int> nbrset = adjList[ii];
                set<int> comple;
-               for(int i =0 ; i< adjList.size(); i++) {
+               for(int i =0 ; i< N; i++) {
                 comple.insert(i);
                }
                for(auto nbr: nbrset){
                 comple.erase(nbr);
                }
+               comple.erase(ii); // vertex cant be linked to itself
 
                adjList[ii]= comple;
 
@@ -70,7 +71,7 @@ class Graph{
                     q.push(nbr);
                 }
             }
-
+            return true; //TODO
         }
 
     private:
@@ -114,6 +115,9 @@ int main(){
         }
         else if(command == "remove_edge"){
             G.removeEdge();
+        }
+        else if(command == "complement"){
+            -G;
         }
 
     }
