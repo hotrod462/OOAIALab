@@ -10,33 +10,67 @@ class Graph{
             int N2 = H.adjList.size();
 
             if(N2> N1){
-                adjList.resize(N2);
+                for(int ii = 0; ii < N1; ii++){
+                    //H is bigger, insert into H fron G
+                    set<int> adj= adjList[ii];
+                    for(auto ele: adj){
+                        H.adjList[ii].insert(ele);
+                    }
+                }
+                adjList= H.adjList;
+            }
+            else{
+                for(int ii =0; ii< N2; ii++){
+                    set<int> adj = H.adjList[ii];
+                    for(auto ele: adj){
+                        adjList[ii].insert(ele);
+                    }
+                }
             }
             
-            int nodes = adjList.size();
+            
+        }
+        void operator -(Graph &H){
 
-            for(int i =0; i< nodes; i++){
-                set<int> &unionset = adjList[i];
-                
-                for(auto adj : H.adjList[i]){
-                    unionset.insert(adj);
+            int N1 = adjList.size();
+            int N2 = H.adjList.size();
+            //vertex set union, but edge set 
+            if(N2> N1){
+                adjList.resize(N2);
+            }
+            else{
+                H.adjList.resize(N1); //Make sure both are of same size 
+            }
+            for (int ii = 0; ii < N2; ii++)
+            {
+                set<int> &adj = adjList.at(ii);
+                set<int> &Hadj = H.adjList[ii];
+
+                for(auto it = adj.begin(); it != adj.end();){
+                    if(Hadj.find(*it) == Hadj.end()){
+                        it = adj.erase(it);
+                    }
+                    else{
+                        it++;
+                    }
                 }
             }
         }
         void operator !(){
             int N = adjList.size();
+
+               set<int> comple;
+               auto hint = comple.end();
+               for(int i =0 ; i< N; i++) {
+                comple.emplace_hint(hint, i);
+               }
             for(int ii= 0; ii< N ; ii++){
                 set<int> nbrset = adjList[ii];
-               set<int> comple;
-               for(int i =0 ; i< N; i++) {
-                comple.insert(i);
-               }
-               for(auto nbr: nbrset){
-                comple.erase(nbr);
-               }
-               comple.erase(ii); // vertex cant be linked to itself
+                set<int> result;
 
-               adjList[ii]= comple;
+                set_difference(comple.begin(), comple.end(), nbrset.begin(), nbrset.end(), inserter(result, result.begin()));
+                result.erase(ii);
+               adjList[ii]= result;
 
 
             }
@@ -93,6 +127,7 @@ class Graph{
                 for(auto nbr: adjList[front]){
                     if(visited.find(nbr) == visited.end()){
                     q.push(nbr);
+                    visited.insert(nbr);
                     }
                 }
             }
@@ -146,8 +181,6 @@ int main(){
         }
 
         else if(command == "isReachable"){
-            int v1, v2;
-            cin>>v1>>v2;
             if(G.isReachable()){
                 cout<<"Yes"<<endl;
             }
@@ -161,6 +194,13 @@ int main(){
             Graph H;
             cin>>H;
             G + H;
+        }
+        else if(command == "intersection"){
+            string _ ;
+            cin>> _;
+            Graph H;
+            cin>>H;
+            G - H;
         }
     }
     while(command != "end");
