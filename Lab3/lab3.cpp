@@ -41,7 +41,8 @@ class Graph{
             else{
                 H.adjList.resize(N1); //Make sure both are of same size 
             }
-            for (int ii = 0; ii < N2; ii++)
+            int size = adjList.size();
+            for (int ii = 0; ii < size; ii++)
             {
                 set<int> &adj = adjList.at(ii);
                 set<int> &Hadj = H.adjList[ii];
