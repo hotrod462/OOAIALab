@@ -26,9 +26,7 @@ class QNS{
         }
     void operator +(QNS &suit){
         pwrLvl += suit.getEnergyStorage();
-        if(pwrLvl > 5000){
-            pwrLvl = 5000;
-        }
+        pwrLvl = min(pwrLvl, 5000);
         dura += suit.getDurability();
       //TODO - check for revitaliving suit
         enStge += suit.getPowerLevel();
@@ -46,7 +44,7 @@ class QNS{
     }
     void operator *(int factor){
         pwrLvl += (pwrLvl*factor)/100;
-        if(pwrLvl > 5000) pwrLvl = 5000;
+        pwrLvl = min(5000, pwrLvl);
         enStge += 5*factor;
         heatLvl += factor;
         if(heatLvl > 500){
@@ -239,11 +237,7 @@ class Battle{
                         }
                     }                     
                     
-                    }
-                    
-                    
-                        
-                        
+                    }       
                     
                 }
                 
@@ -292,8 +286,8 @@ class Battle{
                     
                     cin>>avng1;
                     Avenger &av = (players.find(avng1)->second);
-                    if( !av.isAlive() ) continue; //sanity check
-                    if(!avalSuits.empty()){
+                    
+                    if(!avalSuits.empty() && av.isAlive()){
                         QNS otherSuit = avalSuits.front();
                         avalSuits.pop();
                         av.upgradeSuit(otherSuit);
@@ -336,13 +330,13 @@ class Battle{
             int enemysum =0; 
             for(auto av: heroes){
                 Avenger avng = players.find(av.getName())->second;
-                if(!avng->isDestructed()){
+                if(!(avng->isDestructed())){
                     herosum += avng->getDurability()+ avng->getPowerLevel();
                 }
             }
             for(auto av: enemies){
                 Avenger avng = players.find(av.getName())->second;
-                if(!avng->isDestructed()){
+                if(!(avng->isDestructed())){
                     enemysum += avng->getDurability()+ avng->getPowerLevel();
                 }
             }

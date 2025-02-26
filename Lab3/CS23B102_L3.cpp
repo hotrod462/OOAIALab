@@ -187,17 +187,7 @@ int main(){
             }
             else{
                 cout<<"No"<<endl;
-            }Solution.cpp:129:9: note: candidate: ‘Avenger::Avenger(std::__cxx11::string, QNS, int)’
-         Avenger(string avName, QNS avSuit, int strength): name(avName), suit(avSuit), attackStrength(strength){}
-         ^~~~~~~
-Solution.cpp:129:9: note:   candidate expects 3 arguments, 0 provided
-Solution.cpp:127:7: note: candidate: ‘Avenger::Avenger(const Avenger&)’
- class Avenger{
-       ^~~~~~~
-Solution.cpp:127:7: note:   candidate expects 1 argument, 0 provided
-Solution.cpp:127:7: note: candidate: ‘Avenger::Avenger(Avenger&&)’
-Solution.cpp:127:7: note:   candidate expects 1 argument, 0 provided
-
+            }
         }
         else if(command == "union"){
             string _ ;
