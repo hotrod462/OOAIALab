@@ -105,13 +105,19 @@ class NumberAnalyzer{
 
     NumberAnalyzer(long long int a):x(a){
         hasSqrFactor = false;
+        findDivisors();
     }
     void findDivisors(){
-        for(unsigned int i = 1; i <=(unsigned int)sqrt(x);i++){
-            if(x % i == 0){
-                if(x %(i*i) == 0) hasSqrFactor = true;
+        for (unsigned int i = 1; i <= (unsigned int)sqrt(x); i++)
+        {
+            if (x % i == 0)
+            {
+                if (x % (i * i) == 0 && i != 1)
+                {
+                    hasSqrFactor = true;
+                }
                 divisor.insert(i);
-                divisor.insert(x/i);
+                divisor.insert(x / i);
             }
         }
     }
@@ -136,61 +142,78 @@ class NumberAnalyzer{
 
 
 int main(){
-    while(true){
-        int pick;
-        cin>>pick;
+    int pick;
+    cin >> pick;
 
+    if (pick == 1)
+    {
         int t;
-        cin>>t;
-        //for(int ii = 0; ii < t; ii++){
-                if(pick == 1){
-                    int n;
-                    cin>>n;
-                    vector<long long int> currency(n);
-                    for(int i = 0; i < n; i++){
-                        long long int ele;
-                        cin>>ele;
-                        currency[i] = ele;
-                    }
-                    CurrencySorter c;
-                    c(currency);
-                    for(auto ele: currency){
-                        cout<<ele<<" ";
-                    }
-                }
-
-                if (pick == 2)
-                {
-                    long long int i;
-                    cin >> i;
-                    FibGenerator f;
-                    cout << f(i) << endl;
-                }
-                if (pick == 3)
-                {
-                    PrimeCalculator p;
-                    p.printPrimes();
-                    p.printPrimeSum();
-                }
-                if(pick ==4){
-                    string command;
-                    cin>>command;
-                    long long int x;
-                    cin>>x;
-                    
-                    NumberAnalyzer numal(x);
-                    if(command == "isSqareFree"){
-                        numal.isSquareFree();
-                    }
-                    else if(command == "countDivisors"){
-                        numal.countDivisors();
-                    }
-                    else{
-                        numal.sumOfDivisors();
-                    }
-                }
-        
-                
-            //}
+        cin >> t;
+        for (int ii = 0; ii < t; ii++)
+        {
+            int n;
+            cin >> n;
+            vector<long long int> currency(n);
+            for (int i = 0; i < n; i++)
+            {
+                long long int ele;
+                cin >> ele;
+                currency[i] = ele;
+            }
+            CurrencySorter c;
+            c(currency);
+            //cout << currency.size();
+            for (auto ele : currency)
+            {
+                cout << ele<< " ";
+            }
         }
     }
+
+    if (pick == 2)
+    {
+        long long int i;
+        cin >> i;
+        FibGenerator f;
+        cout << f(i) << endl;
+    }
+    if (pick == 3)
+    {
+        PrimeCalculator p;
+        p.printPrimes();
+        p.printPrimeSum();
+    }
+    if (pick == 4)
+    {
+        int t;
+        cin >> t;
+        for (int ii = 0; ii < t; ii++)
+        {
+            string command;
+            cin >> command;
+            long long int x;
+            cin >> x;
+
+            NumberAnalyzer numal(x);
+            if (command == "isSquareFree")
+            {
+               if( numal.isSquareFree()){
+                cout<<"no"<<endl;
+               }
+               else{
+                cout<<"yes"<<endl;
+               }
+            }
+            else if (command == "countDivisors")
+            {
+                cout << numal.countDivisors()<<endl;
+            }
+            else
+            {
+                cout << numal.sumOfDivisors()<<endl;
+            }
+        }
+    }
+
+    //}
+}
