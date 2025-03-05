@@ -46,7 +46,7 @@ class Board{
      
     ll countInversions(){
         Comparator c1("ascending");
-        mergeSort(flatmat, 0, n * n, c1, true);
+        mergeSort(flatmat, 0, (n * n) -1 , c1, true);
         return invCount;        
     }
 
@@ -74,6 +74,7 @@ class Board{
             }
             else{
                 Asorted.push_back(A[ptrR]);
+                if(isInvCounting) invCount += (m - ptrL + 1);
                 ptrR++;
             }
         }
