@@ -78,8 +78,12 @@ struct FibGenerator{
 class PrimeCalculator{
     public:
 
-    vector<int> primes;
-    void findPrimes(int L, int R){
+    void findPrimes(long long int L, long long int R){
+        vector<bool> primes(R +1, true);
+
+        for(long long int i =0 ; i <= R; i++){
+             
+        }
 
 
     }
