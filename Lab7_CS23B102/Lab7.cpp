@@ -129,6 +129,7 @@ struct Point{
     Point(ll inX, ll inY, ll inInpIdx): x(inX), y(inY), inpIdx(inInpIdx){}
 };
 struct PtComparator{
+    
     bool operator()(Point &p1, Point&p2, bool isCmpX){
         if(isCmpX){
             return p1.x < p2.x;
@@ -249,6 +250,11 @@ class Olympics{
         // TODO -sort ySortPts wrt y,
         mergeSort(ySortPts, 0, ySortPts.size()-1, ptsort, false);
     }
+    void checkInpOrder(PointPair &p1){
+        if(p1.a.inpIdx > p1.b.inpIdx){
+            swap(p1.a, p1.b);
+        }
+    }
 
     PointPair closestPair(ll l , ll r){
         //do slicing on xSortPts
@@ -256,6 +262,7 @@ class Olympics{
 
         if(segsz == 2){ //base case, less than or equal to 3 pts
             PointPair res = {xSortPts[l], xSortPts[r], distance(xSortPts[l], xSortPts[r])};
+            checkInpOrder(res);
             return res;
 
         }
@@ -266,6 +273,7 @@ class Olympics{
 
             PointPair res = tiebrk(res1, res2);
             res = tiebrk(res, res3);
+            checkInpOrder(res);
             return res;
         }
         ll m = l + (r- l)/2;
@@ -301,9 +309,7 @@ class Olympics{
                 acrossBdr = tiebrk(acrossBdr, candid);
             } 
         }
-        if(acrossBdr.a.inpIdx > acrossBdr.b.inpIdx){
-            swap(acrossBdr.a, acrossBdr.b);
-        }
+        checkInpOrder(acrossBdr);
         return acrossBdr; //will return delta points if no smaller dist across Brdr
     }
     
