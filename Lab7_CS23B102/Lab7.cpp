@@ -280,11 +280,14 @@ class Olympics{
         //find 
         vector<Point> inrange;
         for(ll i = l; i < r; i++){
-            Point yPoint = ySortPts[i];  
-            if(lineDistance(line, yPoint) < delta){
-                inrange.push_back(yPoint);
+            Point xPoint = xSortPts[i];  
+            if(lineDistance(line, xPoint) < delta){
+                inrange.push_back(xPoint);
             }
         }
+        PtComparator c2;
+        mergeSort(inrange, 0, inrange.size()-1, c2, false);
+        //need y sorted points which are in range
         //for each point in inrange, check against next fifteen points
         ll rngsz= inrange.size();
         PointPair acrossBdr= minPt;
