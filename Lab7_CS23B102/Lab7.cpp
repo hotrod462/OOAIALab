@@ -255,8 +255,11 @@ class Olympics{
             swap(p1.a, p1.b);
         }
     }
+    PointPair closestPair(){
+        return closestPair(0, noPts -1, ySortPts);
+    }
 
-    PointPair closestPair(ll l , ll r){
+    PointPair closestPair(ll l , ll r, vector<Point>&ySort){
         //do slicing on xSortPts
         ll segsz= r- l + 1;
 
@@ -277,24 +280,28 @@ class Olympics{
             return res;
         }
         ll m = l + (r- l)/2;
+        vector<Point> leftYSort;
+        vector<Point> rightYSort;
+        Point line = xSortPts[m];
+        for(ll ii =0; ii <ySort.size(); ii++){
+            Point yPt = ySort[ii];
+            if(yPt.x <= line.x) leftYSort.push_back(yPt);
+            else rightYSort.push_back(yPt);
+        }
 
-        PointPair lefthalf = closestPair(l, m);
-        PointPair righthalf = closestPair(m+1, r);
+        PointPair lefthalf = closestPair(l, m, leftYSort);
+        PointPair righthalf = closestPair(m+1, r, rightYSort);
 
         PointPair minPt = tiebrk(lefthalf, righthalf);
         double delta = minPt.dist;
         //line L will be at mid element 
-        Point line = xSortPts[m];
+        
         //find 
         vector<Point> inrange;
-        for(ll i = l; i < r; i++){
-            Point xPoint = xSortPts[i];  
-            if(lineDistance(line, xPoint) < delta){
-                inrange.push_back(xPoint);
-            }
+        for(ll ii =0; ii < ySort.size(); ii++){
+            if(lineDistance(line, ySort[ii]) <= delta) inrange.push_back(ySort[ii]);
         }
-        PtComparator c2;
-        mergeSort(inrange, 0, inrange.size()-1, c2, false);
+        
         //need y sorted points which are in range
         //for each point in inrange, check against next fifteen points
         ll rngsz= inrange.size();
@@ -358,7 +365,7 @@ int main(){
         if(command == "CLOSEST_2D"){
             Olympics o1;
             o1.populatePts();
-            PointPair res = o1.closestPair(0, o1.noPts-1 );
+            PointPair res = o1.closestPair();
             cout<<res.a.x<<" "<< res.a.y<<" "<< res.b.x<<" "<<res.b.y<<endl;
 
             
