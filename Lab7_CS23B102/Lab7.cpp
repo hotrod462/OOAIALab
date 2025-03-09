@@ -23,8 +23,9 @@ class Board{
     ll invCount;
     vector<ll> flatmat;
     vector<vector<ll>> mat;
+    string latestOrder;
     
-    Board():  invCount(0){}
+    Board():  invCount(0), latestOrder(""){}
     void initBoard(ll n_in ){
         n = n_in;
 
@@ -281,7 +282,9 @@ class Olympics{
         }
         ll m = l + (r- l)/2;
         vector<Point> leftYSort;
+        leftYSort.reserve(r - m +1);
         vector<Point> rightYSort;
+        rightYSort.reserve(r - m +1);
         Point line = xSortPts[m];
         for(ll ii =0; ii <ySort.size(); ii++){
             Point yPt = ySort[ii];
@@ -351,15 +354,20 @@ int main(){
         if(command == "SORT_2D"){
             string compBy;
             cin>>compBy;
-            Comparator c1(compBy); 
-            b1.sortRows(c1);
+            b1.latestOrder = compBy;
         }
         if(command == "INVERSION_2D"){
+            if(b1.latestOrder != ""){
+            Comparator c1(b1.latestOrder); 
+            b1.sortRows(c1);
+            }   
             cout<<b1.countInversions()<<endl; 
             
         }
 
         if(command == "DISPLAY_2D"){
+            Comparator c1(b1.latestOrder); 
+            b1.sortRows(c1);
             b1.display();
         }
         if(command == "CLOSEST_2D"){
