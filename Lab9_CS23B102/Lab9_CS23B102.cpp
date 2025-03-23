@@ -1,77 +1,80 @@
 #include <vector>
+#include <algorithm>
 #include <iostream>
 
 using namespace std;
 
 struct Graph{
+    int n;
     vector<vector<int>> adjList;
-    vector<vector<int>> compleAdjList;
-    vector<vector<int>> SCC;
+    vector<vector<int>> transAdj;
+    vector<vector<int>> condAdj;
+    vector<vector<int>> components;
     vector<int> nodeWt;
     vector<int> visited; //0 white 1 gray 2 black
-    vector<int> tFinish;
-    int currtime;
     bool isCycle;
-    void dfs(bool onComple){
-            for(int ii = 0; ii < adjList.size(); ++ii){
-                if(visited[ii] == 0){
-                    dfsVisit(ii, onComple);
-                }
-            }
-    }
-    void dfsVisit(int u, bool onComple){
-        currtime++;
-        visited[u] = 1;
-    
-        auto &gAdjList = onComple ? compleAdjList: adjList;
-        for(auto v : gAdjList[u]){
+    int maxEvent;
 
+    Graph(int n_in):n(n_in){
+        //reserve output size to n
+        visited.resize(n, 0);
+        adjList.resize(n, {});
+        transAdj.resize(n, {});
+
+        nodeWt.resize(n);
+        visited.resize(n, 0);
+        isCycle = false;
+        maxEvent = 0;
+    }
+    void dfs(int u, vector<vector<int>> & adj ,vector<int> &output){
+        visited[u] = 1;//mark u from white to gray
+        for(auto v : adj[u]){
             if(visited[v] == 0){
-                dfsVisit(v, onComple);
+                dfs(v, adj, output);
             }
             else{
-                if(!onComple) isCycle = true;
+                isCycle = true;//should this be set while doing dfs on G^T also?
             }
         }
-        currtime++;
-        visited[u] = 2;
-        if(!onComple)tFinish.push_back(u);
-        
+        visited[u]= 2; //mark as black;
+        output.push_back(u);
     }
 
-    // void findSCC(){
-    //     visited.resize(visited.size(), 0);//reset visited list
-
-    
-    // }
-
-    vector<bool> visitedscc;
-    //code reference: https://cp-algorithms.com/graph/strongly-connected-components.html
-    void dfsscc(int v, vector<vector<int>> onAdjList, vector<int> &output){
-        visited[v]= true;
-        for(auto u: onAdjList[v]){
-            if(!visited[v]) dfsscc(u, onAdjList, output);
-        }
-        output.push_back(v);
-    }
-
-    void findscc(vector<vector<int>> &onAdjList, vector<vector<int>>&components, vector<vector<int>> &adjListCond){
-        int n = onAdjList.size();
-        components.clear();
+    void scc(){
         vector<int> order;
+
+        for(int ii = 0; ii < n; ++ii){
+            if(visited[ii] == 0){
+                dfs(ii, adjList, order);
+            }
+        }
+
+        visited.assign(n, 0);
+
+        reverse(order.begin(), order.end());
+
+        vector<int> roots(n, 0);
+
+        for(auto v: order){
+            if(visited[v] == 0){
+                vector<int> component;
+                dfs(v, transAdj, component);
+                components.push_back(component);
+                maxEvent = component.size()> maxEvent ? component.size() : maxEvent;
+                int root = *min_element(component.begin(), component.end());
+                for(auto u : component){
+                    roots[u] = root;
+                }
+            }
+        }
+
+        //make condGraph
+        
+
+
+
     }
 
-    Graph(int n){
-        adjList.resize(n);
-        compleAdjList.resize(n);
-        nodeWt.resize(n);
-
-        visited.resize(n, 0);
-        tFinish.reserve(n);
-        currtime =0;
-        isCycle = false;
-      
-    }
 };
 class GraphAlgorithm{
     public: 
@@ -93,7 +96,7 @@ class isCycle: public GraphAlgorithm{
 class indepComponent: public GraphAlgorithm{
     public:
         void Query(Graph &G){
-            cout<<"WIP"<<endl;
+            cout<<G.components.size()<<" " << G.maxEvent<<endl;
         }
 };
 
@@ -128,10 +131,10 @@ int main(){
         cin>>u>>v;
 
         G.adjList[u-1].push_back(v-1);
-        G.compleAdjList[v-1].push_back(u-1); //make transpose of G
+        G.transAdj[v-1].push_back(u-1); //make transpose of G
         
     }
-    G.dfs(false);
+    G.scc();
     int Q;
     cin>>Q;
     for(int ii = 0; ii < Q; ++ii){
