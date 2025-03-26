@@ -1,6 +1,7 @@
 #include <vector>
 #include <algorithm>
 #include <iostream>
+#include <unordered_map>
 
 using namespace std;
 
@@ -9,7 +10,8 @@ struct Graph{
     vector<vector<int>> adjList;
     vector<vector<int>> transAdj;
     vector<vector<int>> condAdj;
-    vector<vector<int>> components;
+    int compCtr;
+    unordered_map<int,vector<int>> components;
     vector<int> nodeWt;
     vector<int> visited; //0 white 1 gray 2 black
     bool isCycle;
@@ -21,6 +23,7 @@ struct Graph{
         adjList.resize(n, {});
         transAdj.resize(n, {});
 
+        compCtr=0;
         nodeWt.resize(n);
         visited.resize(n, 0);
         isCycle = false;
@@ -57,9 +60,11 @@ struct Graph{
 
         for(auto v: order){
             if(visited[v] == 0){
+                compCtr++;
+
                 vector<int> component;
                 dfs(v, transAdj, component);
-                components.push_back(component);
+                components.insert({compCtr, component});
                 maxEvent = component.size()> maxEvent ? component.size() : maxEvent;
                 int root = *min_element(component.begin(), component.end());
                 for(auto u : component){
@@ -69,6 +74,16 @@ struct Graph{
         }
 
         //make condGraph
+        condAdj.assign(n, {});
+
+        for(int v = 0; v < n; ++v){
+            for(auto u: adjList[v]){
+                if(roots[v] != roots[u]){
+                    condAdj[roots[v]].push_back(roots[u]);
+                }
+            }
+        }
+
         
 
 
